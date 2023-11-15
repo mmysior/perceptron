@@ -176,3 +176,62 @@ def sigmoid(weighted_sum):
     as derivatives of very high or very low inputs are close to zero. It's also not zero-centered.
     """
     return 1 / (1 + np.exp(-weighted_sum))
+
+def confusion_matrix(Y, Y_hat):
+    """
+    Calculate the confusion matrix for binary classification.
+
+    The function computes the confusion matrix for a binary classifier based on the actual and predicted values. 
+    The confusion matrix is a 2x2 NumPy array where each cell corresponds to the count of true positives, 
+    false positives, false negatives, and true negatives.
+
+    Parameters
+    ----------
+    Y : array_like
+        An iterable (like a list or array) of actual binary values (0s and 1s). 
+        Represents the ground truth labels.
+
+    Y_hat : array_like
+        An iterable (like a list or array) of predicted binary values (0s and 1s). 
+        Represents the predicted labels from the model.
+
+    Returns
+    -------
+    matrix : ndarray
+        A 2x2 confusion matrix represented as a NumPy array. The matrix structure is as follows:
+            [[true positives, false negatives],
+             [false positives, true negatives]]
+
+    Notes
+    -----
+    This function assumes that the inputs `Y` and `Y_hat` are of the same length and contain only binary values (0s and 1s).
+    It does not perform any checks for input validation.
+
+    Examples
+    --------
+    >>> Y = [1, 0, 1, 0, 1]
+    >>> Y_hat = [1, 1, 1, 0, 0]
+    >>> confusion_matrix(Y, Y_hat)
+    array([[2., 2.],
+           [1., 1.]])
+    """
+
+    matrix = np.zeros((2, 2))
+    tp = 0
+    tn = 0
+    fp = 0
+    fn = 0
+    for i, j in zip(Y, Y_hat):
+        if i == 1 and i == j:
+            tp  += 1
+        elif i == 1:
+            fn += 1
+        elif i == 0 and i == j:
+            tn += 1
+        else:
+            fp += 1
+    matrix[0, 0] = tp
+    matrix[1, 0] = fp
+    matrix[0, 1] = fn
+    matrix[1, 1] = tn
+    return matrix
